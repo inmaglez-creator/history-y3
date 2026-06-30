@@ -48,11 +48,19 @@ export default function HistoryApp() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("home"); // home | topic | chat
+  const [visitas, setVisitas] = useState(null);
   const bottomRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    fetch("/api/visitas")
+      .then((r) => r.json())
+      .then((d) => setVisitas(d.visitas))
+      .catch(() => {});
+  }, []);
 
   const startPractice = async (topic, subtopic) => {
     setActiveTopic(topic);
@@ -168,6 +176,11 @@ export default function HistoryApp() {
               </div>
             </div>
           ))}
+          {visitas !== null && (
+            <div style={{ textAlign: "center", marginTop: 24, fontSize: 12, color: "#9CA3AF" }}>
+              Visitas: {visitas}
+            </div>
+          )}
         </div>
       </div>
     );
